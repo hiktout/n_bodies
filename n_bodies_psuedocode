@@ -1,0 +1,77 @@
+program N Body Simulation
+	input: initial conditions file p,
+		   time period T
+	
+	read file p
+	initialise structures from x and v
+	repeat T times
+		leapfrog to update x and v
+		calculate system energies
+		calculate orbital characteristics (optional)
+		print current time, θ, R, KE, and PE on one line
+
+function read file p
+	# file p should have n lines of 7 columns,
+	# each giving the initial variables for one particle
+	# col. 1,2,3 is position, col. 4,5,6 is velocity, col. 7 is mass
+	for each line
+		append columns (1,2,3) as a vector to list x
+		append columns (4,5,6) as a vector to list v
+		append column 7 to list m
+		increase n by one
+	do a half back step (optional) to get v -½dt out of sync with x
+
+function half back step
+	calculate F
+	for each velocity in v using index i
+		subtract ½dt*F_i/m_i from v_i
+
+function initialise structures
+	create matrix F_all with size n*n
+	create list F with size n
+
+function leapfrog
+	update F using x
+	update v with F using equation (8.3)
+	update x with v using equation (8.4)
+
+function calculate system energies
+	calculate KE
+	calculate PE
+
+function calculate orbital characteristics
+	calculate θ
+	calculate R
+
+function update F
+	iterate over upper triangular elements of F_all using indices i,j
+		calculate the ijth element of F_all using equation
+			F_all_ij = -G m_i m_j (x_i-x_j)/(|x_i-x_j|^2+ε^2)^3/2
+	make the matrix F_all skew-symmetric (element ij = element ji)
+	for each row i in F_all sum all elements to find F_i
+
+function calculate KE
+	sum ½mv^2 over all particles
+
+function calculate PE
+	sum |F_i||x_i-x_j|/m_i for each particle i to find the total PE
+
+function calculate θ
+	(this assumes that particle 2 is orbiting particle 1)
+	find previous position of particle 2 by subtracting v_2 dt from x_2
+	get θ between x_2-x_1 and x_2-v_2*dt-x_1 using sinθ=a.b/(|a||b|)
+
+function calculate R
+	do |x_1-x_2|
+
+data structures
+	list of vector coordinates x
+	list of vector velocities v
+	list of particle masses m
+	number of particles n
+	2d matrix of vector forces F_all (will always be skew symmetric and have zeroes along the main diagonal)
+	list of vector forces F
+	constant time interval dt
+	time period T in units of dt
+	angle θ in degrees
+	
