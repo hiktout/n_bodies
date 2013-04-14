@@ -1,3 +1,10 @@
+"""
+Script to find optimum softening constant in N_bodies simulation.
+Uses method described in Athanassoula et al (2000), 2000MNRAS.314..475A,
+where the mean average square error is found for varying values of
+the softening constant
+"""
+
 import numpy as np
 
 from n_bodies_fast import N_bodies
@@ -23,6 +30,7 @@ if __name__ == '__main__':
 	# number of realisations
 	times = int(3e5/N)
 
+	# use scaled units as in A+11
 	N_bodies.G = 1
 
 	n = N_bodies(
