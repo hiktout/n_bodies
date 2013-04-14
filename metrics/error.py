@@ -1,5 +1,7 @@
 from numpy import sum
 
+from . import dot
+
 from n_bodies_fast import N_bodies
 
 def F_sphere(R):
