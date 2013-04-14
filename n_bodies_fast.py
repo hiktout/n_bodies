@@ -6,7 +6,6 @@ class N_bodies(N_bodies):
 	Hand optimised version of N_bodies class.
 	See n_bodies.py for documentation
 	"""
-	G = 6.67384e-11 # gravitational constant
 
 	def __init__(self,mass,position,velocity,dt,softening):
 		self.n = len(position)
@@ -39,6 +38,7 @@ class N_bodies(N_bodies):
 		self.r_norm2_u = np.empty((self.n_u,))
 		self.F_u = np.empty((self.n_u,3))
 		self.F[...] = 0
+		# G*m_i
 		self.mG_b = np.tile(self.mG,self.n).repeat(3).reshape(self.n,self.n,3)
 		# for metrics use only!
 		self.mmG_u = (self.mG*self.m[:,np.newaxis])[self.i_u]
