@@ -10,8 +10,8 @@ class Energy(Energy):
 		"""
 		# align pe and ke by moving velocity a half-step
 		v = n.v - 0.5*n.a*n.dt
-		ke = n.m[:,numpy.newaxis]*numpy.square(v)
-		return 0.5*numpy.sum(ke)
+		ke = n.m[:,np.newaxis]*np.square(v)
+		return 0.5*np.sum(ke)
 
 	def potential_energy(self,n):
 		"""
@@ -22,6 +22,5 @@ class Energy(Energy):
 		"""
 		# Potential is sum of potential of each pair of masses
 		
-		U = n.mmG_u/numpy.sqrt(n.r_norm2_u)
-		return numpy.sum(U)
-
+		U = n.mmG_u/np.sqrt(n.r_norm2_u)
+		return np.sum(U)

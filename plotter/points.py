@@ -1,4 +1,5 @@
-import numpy
+from numpy import array
+
 from glumpy import figure,Trackball
 import OpenGL.GL as gl
 
@@ -7,12 +8,12 @@ from multiprocessing import Process
 from multiprocessing.queues import SimpleQueue
 
 def plotter3D(data_q,plots,scale):
-	fig = figure(size=(800,800))
+	fig = figure(size=(400,400))
 	trackball = Trackball(65,135,1.,2.)
 
 	tri_c = [(1,0,0,1),(0,1,0,1),(0,0,1,1)]
-	tri_o = numpy.array([0,0,0])
-	tri = 0.1*numpy.array([[1,0,0],[0,1,0],[0,0,1]])
+	tri_o = array([0,0,0])
+	tri = 0.1*array([[1,0,0],[0,1,0],[0,0,1]])
 
 	@fig.event
 	def on_mouse_drag(x,y,dx,dy,button):

@@ -1,4 +1,5 @@
-import numpy as np
+from numpy import append
+
 import matplotlib.animation as animation
 
 from coroutines import coroutine
@@ -25,7 +26,7 @@ class PlotterProcess(Process):
 		for k,v in d.iteritems():
 			l = self.lines[k]
 			old = l.get_xydata()
-			new = np.append(old,(v,),0)
+			new = append(old,(v,),0)
 			l.set_data(new[:,0],new[:,1])
 
 	def run(self):
@@ -78,61 +79,3 @@ class Plotter:
 		self.data.update(data)
 		if self.data_q.empty() != False:
 			self.data_q.put(data)
-
-# def read_args(args):
-# 		"""
-# 		Helper function to read the line specification
-# 		dictionary into a form useable by pyplot.plot()
-# 		"""
-# 		args = [(None,None,style) for (name,style) in args.iteritems()]
-# 		args = [item for tup in args for item in tup] # flatten
-# 		return args
-
-# def plotter(data_q,plots,axis,position):
-# 	import matplotlib.pyplot as plt # needs to be here for unclear reasons
-# 	fig = plt.figure()
-
-# 	lines = {}
-
-# 	def add_subplot(plots,axis,position):
-# 		ax = fig.add_subplot(position)
-# 		ax.axis(axis)
-# 		# ax.set_aspect('equal')
-
-# 		l = ax.plot(*read_args(plots),markevery=(-1,1))
-# 		l = zip(plots.keys(),l)
-# 		lines.update(l)
-
-# 		return ax
-
-# 	add_subplot(plots,axis,position)
-
-# 	def update(*ignore):
-# 		d = data_q.get()
-
-# 		for k,v in d.iteritems():
-# 			l = lines[k]
-# 			old = l.get_xydata()
-# 			new = np.append(old,(v,),0)
-# 			l.set_data(new[:,0],new[:,1])
-
-# 	anim = animation.FuncAnimation(fig,update,interval=20)
-
-# 	plt.show()
-
-# @coroutine
-# def Plotter(plots,axis,position):
-# 	data_q = SimpleQueue()
-
-# 	plot = Process(target=plotter,args=(data_q,plots,axis,position))
-# 	plot.start()
-
-# 	data = {}
-# 	try:
-# 		while True:
-# 			data.update((yield))
-# 			if data_q.empty() == False:
-# 				continue
-# 			data_q.put(data)
-# 	except GeneratorExit:
-# 		plot.join()
