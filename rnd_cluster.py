@@ -1,40 +1,23 @@
 import numpy as np
 
-def random_positions(R,N):
-	r = np.random.uniform(0,R,N)
-	theta = np.random.uniform(0,2*np.pi,N)
-	u = np.random.uniform(-1,1,N)
-	sinphi = np.sqrt(1-u**2)
-
-	x = r*np.cos(theta)*sinphi
-	y = r*np.sin(theta)*sinphi
-	z = r*u
-
-	x = np.transpose((x,y,z))
-
-	return x
-
-def random_velocities(V,N):
-	v_x = np.random.uniform(-V,V,N)
-	v_y = np.random.uniform(-V,V,N)
-	v_z = np.random.uniform(-V,V,N)
-
-	v = np.transpose((v_x,v_y,v_z))
-
-	return v
+from util.rand import random_positions,random_velocities
 
 if __name__ == '__main__':
-	M = 2e30 # about solar mass
-	R = 7e19
-	V = 1e3
+	# M = 2e30 # about solar mass
+	# N = 500
+	# M = 2e42
+	# R = 1e22
+
+	# day = 86400
+	# year = 365*day
+
+	# T = 14e9*year # hubble time
+
 	N = 500
+	M = 1.
+	R = 1.
 
-	day = 86400
-	year = 365*day
-
-	T = 3e11*year
-
-	m = M*np.ones(N)
+	m = (M/N)*np.ones(N)
 	x = random_positions(R,N)
 	# v = random_velocities(V,N)
 	v = np.zeros((N,3))
@@ -51,9 +34,11 @@ if __name__ == '__main__':
 	# x[3*N/4:] += [0,-2*R,0]
 
 	# from dark_matter import Dark_bodies
-	from n_bodies_fast import N_bodies
+	from n_body.fast import N_bodies
+	N_bodies.G = 1
 	
-	cluster = N_bodies(m,x,v,year*1e8,softening=0.2)
+	# cluster = N_bodies(m,x,v,year*1e5,softening=0.595*R)
+	cluster = N_bodies(m,x,v,0.01,softening=0.1)
 
 	# from n_bodies import N_view
 
@@ -67,12 +52,13 @@ if __name__ == '__main__':
 	# bh_l.remove(bh)
 	# c = N_view(cluster,bh_l)
 
-	from metrics_fast import Energy
-	energy = Energy()
+	from metrics.energy_fast import Energy
+	energy = Energy(cluster)
 
-	from plotter_anim import Plotter
-	data_plot = Plotter({'Energy':'red','KE':'blue','PE':'green'},
-		axis=[0,T,-4e36,2e37],position=211)
+	from plotter import LinePlotter
+	data_plot = LinePlotter({'Energy':'red','KE':'blue','PE':'green','Virial':'purple'},
+		# axis=[0,T,-5e53,2e53],position=211)
+		axis=[0,100,-6,2],position=211)
 	data_plot.show()
 
 	# cluster.find_r()
@@ -81,16 +67,16 @@ if __name__ == '__main__':
 	# v = random_velocities(V,N)
 	# cluster = N_bodies(m,x,v,year,0.1*R)
 
-	from plotter3D import Plotter3D
+	from plotter import Plotter3D
 	plot = Plotter3D({
 		'x':{'color':(1,1,1,0.5),'size':3.0},
 		'bh':{'color':(1,0,0,1),'size':6.0},
 		'w1':{'color':(0,1,0,0.5),'line':True},
 		# 'w2':{'color':(0,1,0,0.5),'line':True},
-	},4*R)
+	},2*R)
 
-	# from metrics import position_dist
-	# from plotter_chaco import HistPlotter
+	# from metrics.dist import position_dist
+	# from plotter import HistPlotter
 	# hist = HistPlotter({'x':'red','x_fit':'red','y':'green','y_fit':'green','z':'blue','z_fit':'blue'})
 	# hist = HistPlotter({'x':'red','y':'green','z':'blue'})
 	# hist = HistPlotter({'r':'red','r_fit':'green'})
@@ -98,7 +84,7 @@ if __name__ == '__main__':
 	# from plotter_chaco import QuiverPlotter
 	# quiver = QuiverPlotter(N)
 
-	from coroutines import printer
+	from util.coroutines import printer
 	pr = printer()
 
 	# from metrics import angular_v
@@ -137,10 +123,11 @@ if __name__ == '__main__':
 			data_plot.send({
 				'Energy':(cluster.t,energy.total),
 				'KE':(cluster.t,energy.ke),
-				'PE':(cluster.t,energy.pe)
+				'PE':(cluster.t,energy.pe),
+				'Virial':(cluster.t,energy.virial),
 			})
-			strf = '%+.3e'
-			pr.send(['Time (yr):', str(cluster.t/year), '|'])
+			strf = '%+.3f'
+			# pr.send(['Time (Gyr):', '%.2f' % (cluster.t/(1e9*year)), '|'])
 			pr.send(['Virial:', strf % energy.virial])
 			pr.send([
 				# 'Time:', str(cluster.t), '|',
