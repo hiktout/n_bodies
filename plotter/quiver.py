@@ -1,6 +1,6 @@
 from numpy import zeros
 
-from coroutines import coroutine
+from util import coroutine
 from multiprocessing import Process
 from multiprocessing.queues import SimpleQueue
 

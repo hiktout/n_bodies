@@ -1,6 +1,6 @@
 from numpy import array
 
-from coroutines import coroutine
+from util import coroutine
 from multiprocessing import Process
 from multiprocessing.queues import SimpleQueue
 
@@ -33,8 +33,8 @@ def histPlotter(data_q,plots):
 				p, = plot.plot((name+'_x',name), type='line', color=style, render_style='connectedhold')
 
 			# virial radius marker
-			p.overlays.append(LineInspector(p,is_listener=True,color='red'))
-			p.index.metadata['selections'] = 5e18
+			p.overlays.append(LineInspector(p,is_listener=True,color='black'))
+			p.index.metadata['selections'] = 1
 
 			self.plot = plot
 

@@ -3,7 +3,7 @@ from numpy import array
 from glumpy import figure,Trackball
 import OpenGL.GL as gl
 
-from coroutines import coroutine
+from util import coroutine
 from multiprocessing import Process
 from multiprocessing.queues import SimpleQueue
 

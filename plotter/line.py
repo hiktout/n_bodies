@@ -2,13 +2,13 @@ from numpy import append
 
 import matplotlib.animation as animation
 
-from coroutines import coroutine
+from util import coroutine
 from multiprocessing import Process
 from multiprocessing.queues import SimpleQueue
 
-class PlotterProcess(Process):
+class LinePlotterProcess(Process):
 	def __init__(self,data_q):
-		super(PlotterProcess,self).__init__()
+		super(LinePlotterProcess,self).__init__()
 
 		self.data_q = data_q
 
@@ -37,6 +37,9 @@ class PlotterProcess(Process):
 		for (plots,axis,position,equal) in self.args:
 			ax = self.fig.add_subplot(position)
 			ax.axis(axis)
+
+			# crossing time
+			ax.axvline(x=0.7)
 			if equal:
 				ax.set_aspect('equal')
 
@@ -58,12 +61,12 @@ class PlotterProcess(Process):
 		args = [item for tup in args for item in tup] # flatten
 		return args
 
-class Plotter:
+class LinePlotter:
 	def __init__(self,*args,**kwargs):
 		self.data_q = SimpleQueue()
 		self.data = {}
 
-		self.plot = PlotterProcess(self.data_q)
+		self.plot = LinePlotterProcess(self.data_q)
 		self.plot.add_plot(*args,**kwargs)
 
 	def show(self):
