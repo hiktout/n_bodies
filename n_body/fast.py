@@ -1,5 +1,7 @@
 import numpy as np
-from n_bodies import N_bodies
+from util import dot
+
+from . import N_bodies
 
 class N_bodies(N_bodies):
 	"""
@@ -41,7 +43,7 @@ class N_bodies(N_bodies):
 		# G*m_i
 		self.mG_b = np.tile(self.mG,self.n).repeat(3).reshape(self.n,self.n,3)
 		# for metrics use only!
-		self.mmG_u = (self.mG*self.m[:,np.newaxis])[self.i_u]
+		self.mmG_u = (self.mG[:,np.newaxis]*self.m)[self.i_u]
 
 		# current run time in seconds
 		self.t = 0
@@ -49,9 +51,7 @@ class N_bodies(N_bodies):
 	def find_r(self):
 		self.r[...] = self.x[:,np.newaxis,:]-self.x
 		self.r_u[...] = self.r[self.i_u]
-		self.r_norm2_u[...] = (self.r_u[:,0]*self.r_u[:,0]
-							+ self.r_u[:,1]*self.r_u[:,1]
-							+ self.r_u[:,2]*self.r_u[:,2])
+		self.r_norm2_u[...] = dot(self.r_u,self.r_u)
 
 	def find_a(self):
 		tmp = (self.r_norm2_u + self.s2)

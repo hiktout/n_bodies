@@ -1,5 +1,7 @@
 import numpy
 
+from util import dot
+
 class N_bodies(object):
 	"""
 	Simulates the time evolution of a system
@@ -30,15 +32,15 @@ class N_bodies(object):
 		"""
 		self.n = len(position)
 
-		self.m = np.empty(self.n)
+		self.m = numpy.empty(self.n)
 		self.m[...] = mass
 		self.mG = -self.G*self.m # precalculate to save time
 
 		# we do it this way to make
 		# sure inputs are consistent
-		self.x = np.empty((self.n,3))
+		self.x = numpy.empty((self.n,3))
 		self.x[...] = position
-		self.v = np.empty((self.n,3))
+		self.v = numpy.empty((self.n,3))
 		self.v[...] = velocity
 		
 		self.dt = dt
@@ -70,7 +72,7 @@ class N_bodies(object):
 		# self.r_norm[...] = numpy.apply_along_axis(numpy.linalg.norm,2,self.r)
 		# or this: ugly but fast
 		# don't sqrt since we square in F
-		self.r_norm2[...] = self.r[:,:,0]*self.r[:,:,0]+self.r[:,:,1]*self.r[:,:,1]+self.r[:,:,2]*self.r[:,:,2]
+		self.r_norm2[...] = dot(self.r,self.r)
 
 	def find_a(self):
 		"""
@@ -82,7 +84,7 @@ class N_bodies(object):
 		# tmp = numpy.sqrt(tmp*tmp*tmp)
 		# self.F[...] = (self.mG/tmp)[:,:,numpy.newaxis]
 		# self.F *= self.r
-		# self.F[...] = numpy.nan_to_num(self.F) # div by zero gives NaN
+		self.F[...] = numpy.nan_to_num(self.F) # div by zero gives NaN
 		# F not true force since does not include m_i
 		# sum 'forces' to get acceleration
 		self.a[...] = numpy.sum(self.F,1)
