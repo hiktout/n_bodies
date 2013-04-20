@@ -1,14 +1,30 @@
-from numpy import sum
+from numpy import sum,sqrt,pi,newaxis
 
-from . import dot
+from util import dot
 
-from n_bodies_fast import N_bodies
+from n_body.fast import N_bodies
 
-def F_sphere(R):
+def F_sphere(R,M):
 	R3 = R**3
 	def F_true(n):
-		m = sum(n.m)
-		true = -n.G*m*n.x/R3
+		# m = sum(n.m)
+		true = -n.G*M*n.x/R3
+		return true
+	return F_true
+
+def F_plummer(Rv,M):
+	a2 = (Rv*3.*pi/16.)**2
+	def F_true(n):
+		r2 = dot(n.x,n.x)
+		r_unit = n.x/sqrt(r2)[:,newaxis]
+		true = -n.G*M*r_unit*((1 + a2/r2)**(-3./2.))[:,newaxis]
+		return true
+	return F_true
+
+def F_plummer_r(Rv,M,G=1):
+	a2 = (Rv*3.*pi/16.)**2
+	def F_true(r):
+		true = -G*M*r*((r**2 + a2)**(-3./2.))
 		return true
 	return F_true
 

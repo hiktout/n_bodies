@@ -1,5 +1,6 @@
 import numpy as np
-from metrics import Energy
+
+from .energy import Energy
 
 class Energy(Energy):
 	def kinetic_energy(self,n):
@@ -9,8 +10,8 @@ class Energy(Energy):
 		Takes an N_bodies instance.
 		"""
 		# align pe and ke by moving velocity a half-step
-		v = n.v - 0.5*n.a*n.dt
-		ke = n.m[:,np.newaxis]*np.square(v)
+		# v = n.v - 0.5*n.a*n.dt
+		ke = n.m[:,np.newaxis]*np.square(n.v)
 		return 0.5*np.sum(ke)
 
 	def potential_energy(self,n):
