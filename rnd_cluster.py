@@ -60,7 +60,7 @@ if __name__ == '__main__':
 		# axis=[0,T,-5e53,2e53],position=211)
 		axis=[0,100,-6,2],position=211)
 	from metrics.dist import quartiles
-	data_plot.add_plot({'R_h':'blue','R':'red'},axis=[0,100,0,2],position=212)
+	data_plot.add_plot({'R_h':'blue','R_3/4':'green','R':'red'},axis=[0,100,0,2],position=212)
 	data_plot.show()
 
 	# cluster.find_r()
@@ -141,6 +141,7 @@ if __name__ == '__main__':
 			q = quartiles(cluster)
 			data_plot.send({
 				'R_h':(cluster.t,q[1]),
+				'R_3/4':(cluster.t,q[2])
 				'R':(cluster.t,q[3]),
 			})
 
