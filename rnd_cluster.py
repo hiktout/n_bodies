@@ -59,6 +59,8 @@ if __name__ == '__main__':
 	data_plot = LinePlotter({'Energy':'red','KE':'blue','PE':'green','Virial':'purple'},
 		# axis=[0,T,-5e53,2e53],position=211)
 		axis=[0,100,-6,2],position=211)
+	from metrics.dist import quartiles
+	data_plot.add_plot({'R_h':'blue','R':'red'},axis=[0,100,0,2],position=212)
 	data_plot.show()
 
 	# cluster.find_r()
@@ -135,6 +137,12 @@ if __name__ == '__main__':
 				'Kinetic Energy:', strf % energy.ke, '|',
 				'Potential Energy:', strf % energy.pe,
 			])
+
+			q = quartiles(cluster)
+			data_plot.send({
+				'R_h':(cluster.t,q[1]),
+				'R':(cluster.t,q[3]),
+			})
 
 			pr.send(None)
 			# if cluster.t >= T:
