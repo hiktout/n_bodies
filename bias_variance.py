@@ -5,10 +5,10 @@ Find bias and varience using method from Zhan (2006)
 import numpy as np
 
 from n_body.fast import N_bodies
-from util.rand import plummer_model
+from util.rand import plummer_model,random_positions
 from util import dot
 from metrics.barycentre import find_barycentre
-from metrics.error import F_plummer_r
+from metrics.error import F_plummer_r,F_sphere_r
 
 if __name__ == '__main__':
 	N = 2000
@@ -23,9 +23,9 @@ if __name__ == '__main__':
 	bins = np.arange(0,10*Rv+dr,dr)
 
 	times = int(6e4/N)
-	f_true = F_plummer_r(Rv,M)
+	f_true = F_sphere_r(Rv,M)
 
-	print '#','plummer','N',N,'M',M,'R',Rv,'dr',dr,'times',times
+	print '#','sphere','N',N,'M',M,'R',Rv,'dr',dr,'times',times
 	print '#','softening','radius','true acceleration','radial acceleration','bias','variance'
 
 	# do for different values of softening
@@ -34,8 +34,8 @@ if __name__ == '__main__':
 		binned_x = [[] for _ in range(len(bins))]
 
 		for _ in xrange(times):
-			x,v = plummer_model(Rv,N)
-			n = N_bodies(m*np.ones(N),x,v,dt=1,softening=s)
+			x = random_positions(Rv,N)
+			n = N_bodies(m*np.ones(N),x,np.zeros((N,3)),dt=1,softening=s)
 			n.x -= find_barycentre(n)
 			n.find_r()
 			n.find_a()
