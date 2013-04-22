@@ -12,6 +12,17 @@ def F_sphere(R,M):
 		return true
 	return F_true
 
+def F_sphere_r(R,M,G=1):
+	R3 = R**3
+	def F_true(r):
+		# m = sum(n.m)
+		if r <= R:
+			true = -G*M*r/R3
+		if r > R:
+			true = -G*M/r**2
+		return true
+	return F_true
+
 def F_plummer(Rv,M):
 	a2 = (Rv*3.*pi/16.)**2
 	def F_true(n):
