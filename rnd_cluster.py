@@ -38,7 +38,7 @@ if __name__ == '__main__':
 	N_bodies.G = 1
 	
 	# cluster = N_bodies(m,x,v,year*1e5,softening=0.595*R)
-	cluster = N_bodies(m,x,v,0.01,softening=0.1)
+	cluster = N_bodies(m,x,v,0.001,softening=0.1)
 
 	# from n_bodies import N_view
 
@@ -58,9 +58,9 @@ if __name__ == '__main__':
 	from plotter import LinePlotter
 	data_plot = LinePlotter({'Energy':'red','KE':'blue','PE':'green','Virial':'purple'},
 		# axis=[0,T,-5e53,2e53],position=211)
-		axis=[0,100,-6,2],position=211)
+		axis=[0,10,-6,2],position=211)
 	from metrics.dist import quartiles
-	data_plot.add_plot({'R_h':'blue','R_3/4':'green','R':'red'},axis=[0,100,0,5],position=212)
+	data_plot.add_plot({'R_h':'blue','R_3/4':'green','R':'red'},axis=[0,10,0,5],position=212)
 	data_plot.show()
 
 	# cluster.find_r()
