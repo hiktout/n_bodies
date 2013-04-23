@@ -49,10 +49,16 @@ class TestMiscellaneous(unittest.TestCase):
 		N = uniform(0,1000)
 
 		x = random_positions(R,N)
-
 		r = dot(x,x)
+		assert_array_less(r,R**2)
 
-		assert_array_less(R**2,r)
+	def test_random_positions_lim_fraction(self):
+		R = uniform(0,1)
+		N = uniform(0,1000)
+
+		x = random_positions(R,N)
+		r = dot(x,x)
+		assert_array_less(r,R**2)
 
 if __name__ == '__main__':
 	unittest.main()
