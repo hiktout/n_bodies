@@ -17,7 +17,7 @@ def spherical(r,N):
 	return x
 
 def random_positions(R,N):
-	r = uniform(0,R,N)**(1./3.)
+	r = R*uniform(0,1,N)**(1./3.)
 	
 	x = spherical(r,N)
 
