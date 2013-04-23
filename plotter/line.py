@@ -48,7 +48,7 @@ class LinePlotterProcess(Process):
 
 			self.lines.update(l)
 
-		anim = animation.FuncAnimation(self.fig,self.update,interval=50)
+		anim = animation.FuncAnimation(self.fig,self.update,interval=20)
 		plt.show()
 
 	@staticmethod
