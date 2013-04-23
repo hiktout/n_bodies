@@ -1,13 +1,13 @@
 import unittest
-from numpy.testing import assert_allclose
+from numpy.testing import assert_allclose,assert_array_less
 
-from numpy.random import rand
+from numpy.random import rand,uniform
 
 from numpy import dot as npdot
 from numpy import zeros
 
 from util import dot
-from util.rand import spherical
+from util.rand import spherical,random_positions
 
 class TestMiscellaneous(unittest.TestCase):
 
@@ -27,7 +27,7 @@ class TestMiscellaneous(unittest.TestCase):
 		a = rand(n,n,3)
 		b = rand(n,n,3)
 
-		np = zeros(n,n)
+		np = zeros((n,n))
 		for i in xrange(n):
 			for j in xrange(n):
 				np[i,j] = npdot(a[i,j],b[i,j])
@@ -35,11 +35,24 @@ class TestMiscellaneous(unittest.TestCase):
 		assert_allclose(np,dot(a,b))
 
 	def test_spherical_lim(self):
-		x = spherical(1,100)
+		R = uniform(0,10)
+		N = uniform(0,1000)
+
+		x = spherical(R,N)
 
 		r = dot(x,x)
 
-		assert_allclose(1,r)
+		assert_allclose(R**2,r)
+
+	def test_random_positions_lim(self):
+		R = uniform(0,10)
+		N = uniform(0,1000)
+
+		x = random_positions(R,N)
+
+		r = dot(x,x)
+
+		assert_array_less(R**2,r)
 
 if __name__ == '__main__':
 	unittest.main()
