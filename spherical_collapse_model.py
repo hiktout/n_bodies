@@ -6,19 +6,17 @@ from util.rand import random_positions
 
 if __name__ == '__main__':
 	# Hubble units
-	N = 500
+	N = 2000
 	M = 10**12 # h^-1 M_sun
 	Rv = 0.163 # h^-1 Mpc
 	tH = 1./75 # Mpc (km/s)^-1 # Hubble time
 	Hubble_Bodies.G = 2.42e-9 # h^-2 Mpc M_sun^-1 (km/s)^2
 
 	m = (M/N)*np.ones(N)
-	x = random_positions(Rv,N)
+	x = random_positions(2*Rv,N)
 	v = np.zeros((N,3))
 
-	print x
-
-	cluster = Hubble_Bodies(m,x,v,1e-3*tH,softening=0.1,initial_time=2.8e-7) # Mpc (km/s)^-1 # initial time, from Gunn & Gott
+	cluster = Hubble_Bodies(m,x,v,5e-4*tH,softening=0.1*Rv,initial_time=0.2*tH) # Mpc (km/s)^-1 # initial time, from Gunn & Gott
 
 	# from plotter import Plotter3D
 	# plot = Plotter3D({
@@ -33,7 +31,7 @@ if __name__ == '__main__':
 		axis=[0,1,-2e16,2e16],position=211)
 	from metrics.dist import quartiles
 	data_plot.add_plot({'R_h':'blue','R_3/4':'green','R':'red'},
-		axis=[0,1,0,5],position=212)
+		axis=[0,1,0,3],position=212)
 	data_plot.show()
 
 	from util.coroutines import printer
@@ -65,13 +63,14 @@ if __name__ == '__main__':
 			})
 			strf = '%+.3e'
 			pr.send(['Time (Gyr):', '%.2f' % (cluster.t*978),'|'])
-			pr.send(['Scale factor:',str(cluster.scale_factor())])
-			# pr.send([
-			# 	'Virial:', strf % energy.virial, '|',
-			# 	'Total Energy:', strf % energy.total, '|',
-			# 	'Kinetic Energy:', strf % energy.ke, '|',
-			# 	'Potential Energy:', strf % energy.pe,
-			# ])
+			pr.send(['Scale factor:','%.3f' % (cluster.scale()),'|'])
+
+			pr.send([
+				'Virial:', strf % energy.virial, '|',
+				'Total Energy:', strf % energy.total, '|',
+				'Kinetic Energy:', strf % energy.ke, '|',
+				'Potential Energy:', strf % energy.pe,
+			])
 
 			q = quartiles(cluster)
 			data_plot.send({
@@ -79,11 +78,15 @@ if __name__ == '__main__':
 				'R_3/4':(cluster.t/tH,q[2]/Rv),
 				'R':(cluster.t/tH,q[3]/Rv),
 			})
-			pr.send([
-				'R_h:',str(q[1]/Rv), '|',
-				'R_3/4:',str(q[2]/Rv), '|',
-				'R:',str(q[3]/Rv),
-			])
+			# pr.send([
+			# 	'R_h:',str(q[1]/Rv), '|',
+			# 	'R_3/4:',str(q[2]/Rv), '|',
+			# 	'R:',str(q[3]/Rv),
+			# ])
+			# pr.send([
+			# 	'x_c:',str(cluster.x_c[0]), '|',
+			# 	'v_c:',str(cluster.v_c[0]),
+			# ])
 
 	# 		pr.send([
 	# 			'|','New Timestep:',
